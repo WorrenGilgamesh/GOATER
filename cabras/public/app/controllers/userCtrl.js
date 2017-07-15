@@ -7,7 +7,7 @@
         method : "GET",
         url : "../public/Usuario"
     }).then(function mySuccess(response) {
-        console.log(response.data);
+        $scope.users = response.data.usuario;
     }, function myError(response) {
         $scope.myWelcome = response.statusText;
     });
