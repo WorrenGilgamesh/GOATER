@@ -16,3 +16,4 @@ Route::get('/', function () {
 });
 
 Route::get('/Usuario',['uses'=>'UsuarioController@index']);
+Route::post('/Usuario',['uses'=>'UsuarioController@store']);

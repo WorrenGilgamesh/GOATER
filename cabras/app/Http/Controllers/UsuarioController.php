@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use App\Usuario;
 
 class UsuarioController extends Controller
 {
@@ -46,7 +48,27 @@ class UsuarioController extends Controller
      */
     public function store(Request $request)
     {
-        //
+         $data = $request->only('usuario');
+        \DB::beginTransaction();
+        try{
+            $data = Usuario::where('Nombre',$request->input('Nombre'))
+                ->where('Descripcion',$request->input('Descripcion'))
+                ->get();
+            if ($data->isEmpty()) {                 
+                $Usuario = new Usuario;
+                $Usuario->Nombre = $request->input('Nombre');
+                $Usuario->Descripcion = $request->input('Descripcion'); 
+                $Usuario->save();
+                \DB::commit();
+                return \Response::json(['store' => true],200);
+            }else{
+                return \Response::json(["ya existe"],200);
+                }
+        }catch (\Exception $e) {
+            \DB::rollBack();
+            \Log::info('Error creating: ' . $e);
+            return \Response::json(['store' => false], 500);
+        }
     }
 
     /**
@@ -92,5 +114,34 @@ class UsuarioController extends Controller
     public function destroy($id)
     {
         //
+    }
+    public function storeFotoPerfil(Request $request)
+    {
+        $path = $request->file("image")->path();
+        $mime = \File::mimeType($path);
+        $img = \File::get($path);
+        $imagen64 = base64_encode($img);
+        try{
+            $imagen = \DB::table('imagen')->where('usuarioId',$request->usuarioId)->first();
+            if($imagen){
+                \DB::table('imagen')
+                    ->where('usuarioId',$request->empleadoId)
+                    ->update([
+                        'fotoPerfil'=>$imagen64,
+                        'fotoPerfilMimeType'=>$mime
+                    ]);
+            }else{
+                \DB::table('imagen')
+                    ->insert([
+                        'empleadoId'=>$request->empleadoId,
+                        'fotoPerfil'=>$imagen64,
+                        'fotoPerfilMimeType'=>$mime
+                    ]); 
+            }
+            return \Response::json(['image'=>$imagen64,'mime'=>$mime],200);
+        } catch(\Exception $e){
+            \Log::info("Error upload: ".$e);
+            return \Response::json(['upload'=>false],500);
+        }
     }
 }
