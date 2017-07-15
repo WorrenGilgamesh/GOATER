@@ -17,3 +17,5 @@ Route::get('/', function () {
 
 Route::get('/Usuario',['uses'=>'UsuarioController@index']);
 Route::post('/Usuario',['uses'=>'UsuarioController@store']);
+Route::post('/FotoPerfil',['uses'=>'UsuarioController@storeFotoPerfil']);
+Route::get('/FotoPerfil/{id}',['uses'=>'UsuarioController@Fotografia']);

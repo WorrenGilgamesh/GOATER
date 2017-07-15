@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Http\UploadedFile;
 use App\Usuario;
 
 class UsuarioController extends Controller
@@ -125,7 +126,7 @@ class UsuarioController extends Controller
             $imagen = \DB::table('imagen')->where('usuarioId',$request->usuarioId)->first();
             if($imagen){
                 \DB::table('imagen')
-                    ->where('usuarioId',$request->empleadoId)
+                    ->where('usuarioId',$request->usuarioId)
                     ->update([
                         'fotoPerfil'=>$imagen64,
                         'fotoPerfilMimeType'=>$mime
@@ -133,7 +134,7 @@ class UsuarioController extends Controller
             }else{
                 \DB::table('imagen')
                     ->insert([
-                        'empleadoId'=>$request->empleadoId,
+                        'usuarioId'=>$request->usuarioId,
                         'fotoPerfil'=>$imagen64,
                         'fotoPerfilMimeType'=>$mime
                     ]); 
@@ -141,7 +142,25 @@ class UsuarioController extends Controller
             return \Response::json(['image'=>$imagen64,'mime'=>$mime],200);
         } catch(\Exception $e){
             \Log::info("Error upload: ".$e);
-            return \Response::json(['upload'=>false],500);
+            return \Response::json(['upload'=>$e->getMessage()],500);
+        }
+    }
+
+    public function Fotografia($id)
+    {
+        try{
+            $imagen = DB::table('imagen')            
+                    ->leftJoin('usuario','imagen.usuarioId','=','usuario.id')
+                    ->select('usuario.nombre as usuario',
+                            'imagen.fotoPerfil as fotoPerfil',
+                            'imagen.fotoPerfilMimeType as fotoPerfilMimeType')                      
+                    ->where('usuario.id','=',$id)
+                    ->get();
+            return \Response::json(["imagen"=>$imagen],200);
+        } catch(\Exception $e){
+            \Log::info('Error getInfo: '.$e);
+            return \Response::json(["imagen"=>$e->getMessage()],500);
+            //$e->getMessage()
         }
     }
 }
