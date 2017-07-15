@@ -7,7 +7,7 @@
         .when("/", {
             template : "<logger-component></logger-component>",
         })
-        .when("/sigup", {
+        .when("/singup", {
             templateUrl : "<inicio-component></inicio-component>"
         })
         .when("/green", {
