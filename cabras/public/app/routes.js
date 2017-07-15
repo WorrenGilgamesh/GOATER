@@ -5,8 +5,7 @@
     app.config(function($routeProvider) {
         $routeProvider
         .when("/", {
-            templateUrl : "app/components/user.html",
-            controller: "userCtrl"
+            template : "<user-component></user-component>",
         })
         .when("/red", {
             templateUrl : "red.htm"
