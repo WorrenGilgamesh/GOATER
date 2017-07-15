@@ -10,8 +10,8 @@
         .when("/signup", {
             template : "<inicio-component></inicio-component>"
         })
-        .when("/green", {
-            templateUrl : "green.htm"
+        .when("/likes", {
+            template : "<likes-component></likes-component>"
         })
         .otherwise( {
             redirectTo:'/'
