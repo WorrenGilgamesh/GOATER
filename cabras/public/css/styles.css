@@ -13,3 +13,16 @@ body,html{
 #header a img{
     height: 80px;
 }
+
+#logger{
+    width: 50%;
+    margin: 100px auto 0;
+}
+
+
+@media only screen and (max-width: 600px) {
+    #logger{
+        width: 100%;
+        margin: 100px auto 0;
+    }
+}
