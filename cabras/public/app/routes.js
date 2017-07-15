@@ -5,10 +5,10 @@
     app.config(function($routeProvider) {
         $routeProvider
         .when("/", {
-            template : "<inicio-component></inicio-component>",
+            template : "<logger-component></logger-component>",
         })
-        .when("/red", {
-            templateUrl : "red.htm"
+        .when("/sigup", {
+            templateUrl : "<inicio-component></inicio-component>"
         })
         .when("/green", {
             templateUrl : "green.htm"
